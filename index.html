@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bmedialab</title>
+<link rel="icon" href="data:,">
+<meta name="description" content="Bmedialab: estudio de branding y diseño web. Creamos marcas que destacan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET / BASE ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#0055ff;
+  --bg-gray:#f4f4f4;
+  --bg-dark:#0a0a0a;
+  --text:#000;
+  --muted:#4a4a4a;
+  --max:1400px;
+  --pad:clamp(16px,4vw,64px);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Rubik',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-weight:400;color:var(--text);line-height:1.55;
+  -webkit-font-smoothing:antialiased;background:#fff;overflow-x:hidden;
+}
+body.modal-open{overflow:hidden}
+img{max-width:100%;display:block;height:auto}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+.container{max-width:var(--max);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+.section{padding:clamp(48px,7vw,110px) 0}
+
+/* ============ HEADER ============ */
+.site-header{position:relative;z-index:10;background:#fff}
+.header-inner{max-width:var(--max);margin:0 auto;padding:20px var(--pad) 0;position:relative}
+.header-logo{
+  display:inline-flex;align-items:flex-start;gap:2px;
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:clamp(22px,2.4vw,30px);
+  letter-spacing:-.02em;line-height:1;margin-bottom:14px;
+}
+.header-logo .reg{font-size:11px;vertical-align:super;margin-left:2px;font-weight:400;line-height:1}
+.header-line{border:none;border-top:1px solid #000;margin:0}
+.header-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;padding:22px 0 20px;flex-wrap:wrap;
+}
+.nav{display:flex;align-items:center;gap:clamp(18px,3vw,48px);flex-wrap:wrap}
+.nav a{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:clamp(14px,1.15vw,16px);letter-spacing:.01em;color:#1a1a1a;
+  transition:color .2s;
+}
+.nav a:hover{color:var(--accent)}
+
+.header-socials{display:flex;align-items:center;gap:14px}
+.header-socials a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid #000;transition:all .2s;
+}
+.header-socials a:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.header-socials svg{width:16px;height:16px;fill:currentColor}
+
+.burger{
+  display:none;width:36px;height:36px;
+  flex-direction:column;justify-content:center;
+  gap:5px;align-items:flex-end;margin-left:auto;
+}
+.burger span{display:block;width:22px;height:2px;background:#000;transition:.3s}
+.burger span:nth-child(2){width:16px}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ============ PORTAFOLIO (2 imágenes) ============ */
+.portfolio{padding:clamp(40px,5vw,80px) 0}
+.portfolio .title-line{
+  display:flex;flex-direction:column;gap:12px;
+  margin-bottom:clamp(28px,4vw,50px);
+}
+.portfolio .title-line .label{
+  font-family:'Rubik',sans-serif;font-weight:700;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+}
+.portfolio .title-line hr{border:none;border-top:1px solid #000;margin:0}
+
+.grid-2{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(16px,2.4vw,40px);
+}
+.card{display:flex;flex-direction:column}
+.card .img-wrap{position:relative;overflow:hidden;background:#eee;aspect-ratio:3/2}
+.card .img-wrap img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .6s ease;
+}
+.card:hover .img-wrap img{transform:scale(1.04)}
+.card .meta{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:12px;min-height:52px;padding-top:14px;margin-top:4px;
+}
+.card h3{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:clamp(14px,1.2vw,17px);
+  letter-spacing:.02em;text-transform:uppercase;
+}
+.card .tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{
+  display:inline-block;padding:3px 12px;border:1px solid #000;
+  border-radius:999px;font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:11px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+}
+.card .line{height:1px;background:#000;margin-top:8px}
+
+/* ============ QUÉ HACEMOS ============ */
+.what-section{background:var(--bg-gray)}
+.what{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,80px);align-items:start}
+.what .img{border-radius:2px;overflow:hidden;background:#eee;aspect-ratio:3/2}
+.what .img img{width:100%;height:100%;object-fit:cover}
+.what h2{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:clamp(26px,2.8vw,40px);
+  letter-spacing:-.02em;margin-bottom:18px;
+}
+.what hr{border:none;border-top:1px solid #000;margin:0 0 20px}
+.what p{color:var(--muted);font-size:15px;font-weight:400;max-width:55ch}
+
+.services{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(20px,3vw,50px);
+  padding-top:clamp(36px,5vw,70px);
+  margin-top:clamp(36px,5vw,70px);
+  border-top:1px solid #000;
+}
+.service .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);margin-bottom:18px}
+.service h3{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:clamp(16px,1.4vw,20px);
+  letter-spacing:-.01em;margin-bottom:14px;
+}
+.service hr{border:none;border-top:1px solid #000;margin:0 0 16px}
+.service p{color:var(--muted);font-size:14px;font-weight:400;margin-bottom:14px}
+.service a{color:var(--accent);font-size:14px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+
+/* ============ CTA PRESUPUESTO ============ */
+.cta{
+  background:var(--bg-dark);color:#fff;
+  text-align:center;
+  padding:clamp(60px,9vw,130px) 0;
+  position:relative;overflow:hidden;
+}
+.cta::before{
+  content:"";position:absolute;top:-40%;right:-10%;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle, rgba(0,85,255,.25), transparent 70%);
+  pointer-events:none;
+}
+.cta h2{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:clamp(28px,3.6vw,52px);
+  letter-spacing:-.02em;margin-bottom:18px;position:relative;
+}
+.cta p{
+  color:#b8b8b8;font-size:clamp(14px,1.2vw,17px);
+  max-width:55ch;margin:0 auto 36px;position:relative;
+}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  background:#fff;color:#000;
+  padding:16px 32px;border-radius:999px;
+  font-family:'Rubik',sans-serif;font-weight:700;
+  font-size:14px;letter-spacing:.04em;
+  transition:all .25s;position:relative;
+}
+.cta-btn:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
+.cta-btn svg{width:20px;height:20px;flex:none;transition:transform .3s}
+.cta-btn:hover svg{transform:rotate(45deg)}
+
+/* ============ FOOTER ============ */
+.site-footer{
+  background:var(--bg-dark);color:#fff;
+  padding:clamp(40px,5vw,70px) 0 40px;
+  border-top:1px solid #222;
+}
+.site-footer .top{
+  display:grid;grid-template-columns:1.2fr 2fr;
+  gap:clamp(24px,4vw,80px);
+  padding-bottom:40px;border-bottom:1px solid #333;
+}
+.site-footer .brand .logo-text{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:26px;letter-spacing:-.02em;
+  margin-bottom:22px;display:block;
+}
+.site-footer .brand .logo-text .reg{font-size:11px;vertical-align:super;font-weight:400}
+.site-footer .socials{display:flex;gap:12px;margin-bottom:20px}
+.site-footer .socials a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid #333;color:#fff;transition:all .2s;
+}
+.site-footer .socials a:hover{background:var(--accent);border-color:var(--accent)}
+.site-footer .socials svg{width:18px;height:18px;fill:currentColor}
+.site-footer .brand .email{
+  display:block;font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:14px;color:#ddd;margin-bottom:8px;transition:color .2s;
+}
+.site-footer .brand .email:hover{color:var(--accent)}
+
+.footer-cols{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2vw,40px)}
+.footer-cols ul{list-style:none}
+.footer-cols li{margin-bottom:12px;font-size:13px;font-weight:400;color:#cfcfcf}
+.footer-cols a{color:#cfcfcf;transition:color .2s}
+.footer-cols a:hover{color:var(--accent)}
+.footer-cols .head{
+  color:#fff;font-family:'Rubik',sans-serif;font-weight:700;
+  margin-bottom:14px;letter-spacing:.06em;text-transform:uppercase;font-size:12px;
+}
+.site-footer .bottom{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;
+  padding-top:26px;font-size:12px;font-weight:400;color:#8a8a8a;
+}
+
+/* ============ MODAL ============ */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;z-index:1000;
+  opacity:0;visibility:hidden;
+  transition:opacity .3s, visibility .3s;
+}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{
+  background:#fff;color:#000;
+  width:100%;max-width:640px;
+  max-height:90vh;overflow-y:auto;
+  border-radius:6px;
+  padding:clamp(24px,4vw,48px);
+  position:relative;
+  transform:translateY(20px) scale(.98);
+  transition:transform .3s;
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  width:38px;height:38px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:transparent;color:#000;transition:background .2s;
+}
+.modal-close:hover{background:#f0f0f0}
+.modal-close svg{width:18px;height:18px}
+.modal h3{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:clamp(22px,2.4vw,30px);
+  letter-spacing:-.02em;margin-bottom:10px;
+}
+.modal .modal-sub{color:var(--muted);font-size:14px;margin-bottom:26px}
+.modal form{display:flex;flex-direction:column;gap:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{
+  font-family:'Rubik',sans-serif;font-weight:500;
+  font-size:12.5px;letter-spacing:.03em;color:#1a1a1a;
+}
+.field label .req{color:var(--accent)}
+.field input,
+.field select,
+.field textarea{
+  font-family:'Rubik',sans-serif;font-size:14px;
+  padding:12px 14px;
+  border:1px solid #ddd;border-radius:4px;
+  background:#fff;color:#000;
+  transition:border-color .2s, box-shadow .2s;
+  width:100%;
+}
+.field textarea{resize:vertical;min-height:110px;font-family:'Rubik',sans-serif}
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(0,85,255,.12);
+}
+.modal .submit-btn{
+  margin-top:8px;
+  background:#000;color:#fff;
+  padding:15px 24px;border-radius:999px;
+  font-family:'Rubik',sans-serif;font-weight:700;
+  font-size:14px;letter-spacing:.04em;
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  transition:background .2s, transform .2s;
+  width:100%;
+}
+.modal .submit-btn:hover:not(:disabled){background:var(--accent);transform:translateY(-1px)}
+.modal .submit-btn:disabled{opacity:.6;cursor:not-allowed}
+.form-status{
+  font-size:13px;text-align:center;padding:10px;
+  border-radius:4px;display:none;margin-top:6px;
+}
+.form-status.success{display:block;background:#e7f7ec;color:#1a7a3a}
+.form-status.error{display:block;background:#fdeaea;color:#c0392b}
+.botcheck{position:absolute;left:-9999px;opacity:0}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1024px){
+  .services{grid-template-columns:1fr 1fr}
+}
+@media (max-width:768px){
+  .header-row{padding:16px 0}
+  .nav{
+    display:none;position:absolute;top:100%;left:0;right:0;
+    background:#fff;flex-direction:column;align-items:flex-start;
+    padding:20px var(--pad) 30px;border-bottom:1px solid #eee;
+    gap:18px;z-index:50;box-shadow:0 8px 20px rgba(0,0,0,.06);
+  }
+  .nav.open{display:flex}
+  .burger{display:flex}
+  .header-socials{display:none}
+  .grid-2{grid-template-columns:1fr}
+  .what,.site-footer .top{grid-template-columns:1fr}
+  .services{grid-template-columns:1fr;gap:36px}
+  .footer-cols{grid-template-columns:1fr 1fr}
+  .form-row{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  .footer-cols{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="header-inner">
+
+    <a href="#" class="header-logo">
+      Bmedialab<span class="reg">®</span>
+    </a>
+
+    <hr class="header-line">
+
+    <div class="header-row">
+      <nav class="nav" id="nav">
+        <a href="#" class="active">Inicio</a>
+        <a href="#portafolio">Portafolio</a>
+        <a href="#que-hacemos">Qué hacemos</a>
+        <a href="#" id="navPresupuesto">Cotiza tu proyecto</a>
+      </nav>
+
+      <div class="header-socials">
+        <a href="https://www.facebook.com/BMediaLabTj" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9V12h2.54V9.8c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.13 22 16.99 22 12z"/></svg>
+        </a>
+        <a href="mailto:bmedialabtj@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= PORTAFOLIO (2 imágenes) ================= -->
+  <section class="portfolio" id="portafolio">
+    <div class="container">
+      <div class="title-line">
+        <span class="label">Portafolio</span>
+        <hr>
+      </div>
+
+      <div class="grid-2">
+
+        <a href="https://aracelibeltran-asesorinmobiliario.com/" class="card">
+          <div class="img-wrap">
+            <img src="src/imgs/Lotes.png" alt="Paye Rogers" loading="lazy">
+          </div>
+          <div class="meta">
+            <h3>Web de lotes</h3>
+            <div class="tags"><span class="tag">Web</span></div>
+          </div>
+          <div class="line"></div>
+        </a>
+
+        <a href="#" class="card">
+          <div class="img-wrap">
+            <img src="src/imgs/dashboard.png"  alt="Marinaterra" loading="lazy">
+          </div>
+          <div class="meta">
+            <h3>Automatización con IA</h3>
+            <div class="tags"><span class="tag">Bot</span><span class="tag">Web</span></div>
+          </div>
+          <div class="line"></div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= QUÉ HACEMOS ================= -->
+  <section class="section what-section" id="que-hacemos">
+    <div class="container">
+      <div class="what">
+        <div class="img">
+          <img src="https://picsum.photos/seed/bmedialab-team/900/600" alt="Equipo Bmedialab" loading="lazy">
+        </div>
+        <div>
+          <h2>¿Qué hacemos?</h2>
+          <hr>
+          <p>En Bmedialab somos un estudio de branding y diseño web que ayuda a marcas a destacar en un mercado cada vez más competitivo. Trabajamos el diseño web, el diseño de logotipos y la identidad gráfica como un solo sistema, porque una marca no se sostiene si sus piezas no hablan el mismo idioma.</p>
+        </div>
+      </div>
+
+      <div class="services">
+        <div class="service">
+          <div class="dot"></div>
+          <h3>Branding e identidad de marca</h3>
+          <hr>
+          <p>Diseño de logotipos, identidad gráfica y manual de marca para empresas que necesitan destacar.</p>
+        </div>
+        <div class="service">
+          <div class="dot"></div>
+          <h3>Diseño y desarrollo web</h3>
+          <hr>
+          <p>Sitios web hechos a la medida, optimizados para velocidad, SEO y experiencia de usuario.</p>
+        </div>
+        <div class="service">
+          <div class="dot"></div>
+          <h3>Marketing digital</h3>
+          <hr>
+          <p>Estrategias de contenido y campañas digitales que conectan tu marca con las personas correctas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA PRESUPUESTO ================= -->
+  <section class="cta" id="presupuesto">
+    <div class="container">
+      <h2>¿Listo para hacer despegar tu marca?</h2>
+      <p>Solicita un presupuesto sin compromiso y te contactamos en menos de 24 horas.</p>
+      <button class="cta-btn" data-open-modal>
+        <svg viewBox="0 0 17.1226 17.1226">
+          <circle cx="8.56" cy="8.56" r="8.56" fill="#0055ff"/>
+          <path d="m5.09 8.07q-0.2 0-0.35 0.14-0.14 0.15-0.14 0.35 0 0.21 0.14 0.35 0.15 0.14 0.35 0.15h5.74l-2.12 2.12q-0.07 0.07-0.11 0.16-0.04 0.09-0.04 0.19 0 0.1 0.04 0.19 0.04 0.09 0.11 0.16 0.07 0.07 0.16 0.11 0.09 0.04 0.19 0.04 0.09 0 0.19-0.04 0.09-0.04 0.16-0.11l2.97-2.97q0.07-0.07 0.11-0.16 0.03-0.09 0.03-0.19 0-0.1-0.03-0.19-0.04-0.09-0.11-0.16l-2.97-2.97q-0.07-0.07-0.16-0.11-0.1-0.04-0.19-0.04-0.1 0-0.19 0.04-0.09 0.04-0.16 0.11-0.07 0.07-0.11 0.16-0.04 0.09-0.04 0.19 0 0.1 0.04 0.19 0.04 0.09 0.11 0.16l2.12 2.13h-5.74z" fill="#fff"/>
+        </svg>
+        <span>Solicita un presupuesto</span>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="top">
+      <div class="brand">
+        <span class="logo-text">Bmedialab<span class="reg">®</span></span>
+        <div class="socials">
+          <a href="https://www.facebook.com/BMediaLabTj" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9V12h2.54V9.8c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.13 22 16.99 22 12z"/></svg>
+          </a>
+          <a href="mailto:bmedialabtj@gmail.com" aria-label="Email">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </a>
+        </div>
+        <a href="mailto:bmedialabtj@gmail.com" class="email">bmedialabtj@gmail.com</a>
+      </div>
+
+      <div class="footer-cols">
+        <ul>
+          <li class="head">Navegación</li>
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#portafolio">Portafolio</a></li>
+          <li><a href="#que-hacemos">Qué hacemos</a></li>
+          <li><a href="#" data-open-modal>Cotiza tu proyecto</a></li>
+        </ul>
+        <ul>
+          <li class="head">Contacto</li>
+          <li><a href="https://www.facebook.com/BMediaLabTj" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="mailto:bmedialabtj@gmail.com">bmedialabtj@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <span>© <span id="year"></span> Bmedialab. Todos los derechos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= MODAL FORM ================= -->
+<div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <h3 id="modalTitle">Solicita tu presupuesto</h3>
+    <p class="modal-sub">Cuéntanos sobre tu proyecto y te contactamos en menos de 24 horas.</p>
+
+    <form id="quoteForm" novalidate>
+      <!-- ⚠️ PEGA AQUÍ TU ACCESS KEY DE web3forms.com -->
+      <input type="hidden" name="access_key" value="TU_ACCESS_KEY_AQUI">
+      <input type="hidden" name="subject" value="Nuevo presupuesto desde Bmedialab">
+      <input type="hidden" name="from_name" value="Bmedialab Web">
+      <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off">
+
+      <div class="form-row">
+        <div class="field">
+          <label for="name">Nombre <span class="req">*</span></label>
+          <input type="text" id="name" name="name" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="req">*</span></label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="phone">Teléfono</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel">
+        </div>
+        <div class="field">
+          <label for="company">Empresa</label>
+          <input type="text" id="company" name="company" autocomplete="organization">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="project_type">Tipo de proyecto <span class="req">*</span></label>
+        <select id="project_type" name="project_type" required>
+          <option value="">Selecciona una opción…</option>
+          <option value="Branding">Branding / Identidad de marca</option>
+          <option value="Diseño Web">Diseño y desarrollo web</option>
+          <option value="Marketing">Marketing digital</option>
+          <option value="Rediseño">Rediseño de sitio existente</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="budget">Presupuesto estimado (opcional)</label>
+        <select id="budget" name="budget">
+          <option value="">Selecciona un rango…</option>
+          <option value="Menos de $15,000 MXN">Menos de $15,000 MXN</option>
+          <option value="$15,000 – $30,000 MXN">$15,000 – $30,000 MXN</option>
+          <option value="$30,000 – $60,000 MXN">$30,000 – $60,000 MXN</option>
+          <option value="Más de $60,000 MXN">Más de $60,000 MXN</option>
+          <option value="Aún no lo defino">Aún no lo defino</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">Cuéntanos sobre tu proyecto <span class="req">*</span></label>
+        <textarea id="message" name="message" required placeholder="¿Qué necesitas? ¿Tienes referencias? ¿Cuál es el objetivo?"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <span class="btn-text">Enviar solicitud</span>
+      </button>
+
+      <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ============ AÑO DINÁMICO ============ */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ============ MOBILE NAV ============ */
+const burger = document.getElementById('burger');
+const nav = document.getElementById('nav');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  nav.classList.toggle('open');
+});
+nav.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    nav.classList.remove('open');
+  });
+});
+
+/* ============ MODAL ============ */
+const overlay = document.getElementById('modalOverlay');
+const modalClose = document.getElementById('modalClose');
+const formStatus = document.getElementById('formStatus');
+
+function openModal(e){
+  if(e) e.preventDefault();
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+  setTimeout(() => {
+    const firstInput = overlay.querySelector('input[name="name"]');
+    if(firstInput) firstInput.focus();
+  }, 320);
+}
+function closeModal(){
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+}
+document.querySelectorAll('[data-open-modal], #navPresupuesto').forEach(el => {
+  el.addEventListener('click', openModal);
+});
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', (e) => {
+  if(e.target === overlay) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+});
+
+/* ============ FORMULARIO WEB3FORMS ============ */
+const form = document.getElementById('quoteForm');
+const submitBtn = document.getElementById('submitBtn');
+const btnText = submitBtn.querySelector('.btn-text');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  formStatus.className = 'form-status';
+  formStatus.textContent = '';
+
+  if(!form.checkValidity()){
+    form.reportValidity();
+    return;
+  }
+
+  submitBtn.disabled = true;
+  btnText.textContent = 'Enviando…';
+
+  const formData = new FormData(form);
+  const json = Object.fromEntries(formData);
+
+  try{
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(json)
+    });
+    const data = await res.json();
+
+    if(data.success){
+      formStatus.className = 'form-status success';
+      formStatus.textContent = '¡Gracias! Recibimos tu solicitud. Te contactaremos pronto.';
+      form.reset();
+      btnText.textContent = '¡Enviado!';
+      setTimeout(() => {
+        closeModal();
+        submitBtn.disabled = false;
+        btnText.textContent = 'Enviar solicitud';
+        formStatus.className = 'form-status';
+        formStatus.textContent = '';
+      }, 2800);
+    } else {
+      throw new Error(data.message || 'Error al enviar');
+    }
+  } catch(err){
+    formStatus.className = 'form-status error';
+    formStatus.textContent = 'Hubo un error al enviar. Intenta de nuevo o escríbenos a bmedialabtj@gmail.com';
+    submitBtn.disabled = false;
+    btnText.textContent = 'Enviar solicitud';
+  }
+});
+</script>
+</body>
+</html>
