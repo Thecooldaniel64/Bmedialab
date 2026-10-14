@@ -308,6 +308,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .form-status.success{display:block;background:#e7f7ec;color:#1a7a3a}
 .form-status.error{display:block;background:#fdeaea;color:#c0392b}
 .botcheck{position:absolute;left:-9999px;opacity:0}
+.hidden-iframe{display:none;width:0;height:0;border:0;position:absolute;}
 
 /* ============ RESPONSIVE ============ */
 @media (max-width:1024px){
@@ -373,7 +374,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 
 <main>
 
-  <!-- ================= PORTAFOLIO (2 imágenes) ================= -->
+  <!-- ================= PORTAFOLIO ================= -->
   <section class="portfolio" id="portafolio">
     <div class="container">
       <div class="title-line">
@@ -385,7 +386,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 
         <a href="https://aracelibeltran-asesorinmobiliario.com/" class="card">
           <div class="img-wrap">
-            <img src="src/imgs/Lotes.png" alt="Paye Rogers" loading="lazy">
+            <img src="src/imgs/Lotes.png" alt="Web de lotes" loading="lazy">
           </div>
           <div class="meta">
             <h3>Web de lotes</h3>
@@ -396,7 +397,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 
         <a href="#" class="card">
           <div class="img-wrap">
-            <img src="src/imgs/dashboard.png"  alt="Marinaterra" loading="lazy">
+            <img src="src/imgs/dashboard.png" alt="Automatización con IA" loading="lazy">
           </div>
           <div class="meta">
             <h3>Automatización con IA</h3>
@@ -414,7 +415,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
     <div class="container">
       <div class="what">
         <div class="img">
-          <img src="https://picsum.photos/seed/bmedialab-team/900/600" alt="Equipo Bmedialab" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&h=600&fit=crop" alt="Equipo Bmedialab trabajando en proyectos de diseño" loading="lazy">
         </div>
         <div>
           <h2>¿Qué hacemos?</h2>
@@ -515,9 +516,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
     <h3 id="modalTitle">Solicita tu presupuesto</h3>
     <p class="modal-sub">Cuéntanos sobre tu proyecto y te contactamos en menos de 24 horas.</p>
 
-    <form id="quoteForm" novalidate>
-      <!-- ⚠️ PEGA AQUÍ TU ACCESS KEY DE web3forms.com -->
-      <input type="hidden" name="access_key" value="TU_ACCESS_KEY_AQUI">
+    <!-- ✅ FORMULARIO NATIVO con method="POST" (crítico para Web3Forms) -->
+    <form
+      id="quoteForm"
+      action="https://api.web3forms.com/submit"
+      method="POST"
+      target="hidden_iframe"
+    >
+      <input type="hidden" name="access_key" value="44038095-15c2-442e-ab92-0eeddf4682b9">
       <input type="hidden" name="subject" value="Nuevo presupuesto desde Bmedialab">
       <input type="hidden" name="from_name" value="Bmedialab Web">
       <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off">
@@ -579,6 +585,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 
       <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
     </form>
+
+    <!-- iframe oculto donde se carga la respuesta sin navegar -->
+    <iframe name="hidden_iframe" id="hidden_iframe" class="hidden-iframe" title="Form submission"></iframe>
   </div>
 </div>
 
@@ -631,59 +640,51 @@ document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
 });
 
-/* ============ FORMULARIO WEB3FORMS ============ */
-const form = document.getElementById('quoteForm');
+/* ================================================================
+   FORMULARIO WEB3FORMS
+   ================================================================
+   ⚠️ IMPORTANTE: NO interceptamos el evento 'submit' con
+   preventDefault(), porque eso impediría que el navegador haga el
+   POST nativo. Solo escuchamos el evento para mostrar "Enviando…"
+   y detectamos la respuesta con el 'load' del iframe.
+*/
+const form      = document.getElementById('quoteForm');
 const submitBtn = document.getElementById('submitBtn');
-const btnText = submitBtn.querySelector('.btn-text');
+const btnText   = submitBtn.querySelector('.btn-text');
+const iframe    = document.getElementById('hidden_iframe');
+let isSubmitting = false;
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  formStatus.className = 'form-status';
-  formStatus.textContent = '';
-
+form.addEventListener('submit', () => {
+  // NO hacemos e.preventDefault()
+  // El navegador hará el POST nativo a action="https://api.web3forms.com/submit"
   if(!form.checkValidity()){
     form.reportValidity();
     return;
   }
-
+  isSubmitting = true;
   submitBtn.disabled = true;
   btnText.textContent = 'Enviando…';
+  formStatus.className = 'form-status';
+  formStatus.textContent = '';
+});
 
-  const formData = new FormData(form);
-  const json = Object.fromEntries(formData);
+// Cuando el iframe termina de cargar (respuesta de Web3Forms), éxito
+iframe.addEventListener('load', () => {
+  if(!isSubmitting) return;
+  isSubmitting = false;
 
-  try{
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(json)
-    });
-    const data = await res.json();
+  formStatus.className = 'form-status success';
+  formStatus.textContent = '¡Gracias! Recibimos tu solicitud. Te contactaremos pronto.';
+  form.reset();
+  btnText.textContent = '¡Enviado!';
 
-    if(data.success){
-      formStatus.className = 'form-status success';
-      formStatus.textContent = '¡Gracias! Recibimos tu solicitud. Te contactaremos pronto.';
-      form.reset();
-      btnText.textContent = '¡Enviado!';
-      setTimeout(() => {
-        closeModal();
-        submitBtn.disabled = false;
-        btnText.textContent = 'Enviar solicitud';
-        formStatus.className = 'form-status';
-        formStatus.textContent = '';
-      }, 2800);
-    } else {
-      throw new Error(data.message || 'Error al enviar');
-    }
-  } catch(err){
-    formStatus.className = 'form-status error';
-    formStatus.textContent = 'Hubo un error al enviar. Intenta de nuevo o escríbenos a bmedialabtj@gmail.com';
+  setTimeout(() => {
+    closeModal();
     submitBtn.disabled = false;
     btnText.textContent = 'Enviar solicitud';
-  }
+    formStatus.className = 'form-status';
+    formStatus.textContent = '';
+  }, 2800);
 });
 </script>
 </body>
